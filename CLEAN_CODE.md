@@ -147,6 +147,157 @@ This chapter explains the differences between objects and data structures and ho
 ## Chapter 7: Error Handling
 The focus here is on handling errors gracefully and effectively. The chapter advocates for using exceptions rather than error codes, writing clean try-catch-finally blocks, and avoiding returning null or passing null as an argument.
 
+#### **Use Exceptions Rather Than Return Codes**
+- **Problem with Return Codes**: They clutter the caller with error-checking logic and obscure the main logic of the code.
+- **Example of Return Codes**:
+  ```java
+  if (deletePage(page) == E_OK) {
+      if (registry.deleteReference(page.name) == E_OK) {
+          if (configKeys.deleteKey(page.name.makeKey()) != E_OK) {
+              logger.log("Error deleting key.");
+          }
+      } else {
+          logger.log("Error deleting reference.");
+      }
+  } else {
+      logger.log("Error deleting page.");
+  }
+  ```
+- **Using Exceptions**: Simplifies the error handling by separating error processing from the main logic.
+  ```java
+  try {
+      deletePage(page);
+      registry.deleteReference(page.name);
+      configKeys.deleteKey(page.name.makeKey());
+  } catch (Exception e) {
+      logger.log(e.getMessage());
+  }
+  ```
+
+#### **Extract Try/Catch Blocks**
+- **Problem**: Try/catch blocks can confuse the structure of the code and mix error processing with normal processing.
+- **Solution**: Extract the bodies of the try and catch blocks into separate methods.
+- **Example**:
+  ```java
+  public void delete(Page page) {
+      try {
+          deletePageAndAllReferences(page);
+      } catch (Exception e) {
+          logError(e);
+      }
+  }
+
+  private void deletePageAndAllReferences(Page page) throws Exception {
+      deletePage(page);
+      registry.deleteReference(page.name);
+      configKeys.deleteKey(page.name.makeKey());
+  }
+
+  private void logError(Exception e) {
+      logger.log(e.getMessage());
+  }
+  ```
+
+#### **Write Your Try-Catch-Finally Statement First**
+- **Guideline**: Write the try-catch-finally statement before writing the code that goes inside it. This ensures that you handle errors from the beginning.
+- **Example**:
+  ```java
+  try {
+      // Code that might throw an exception
+  } catch (Exception e) {
+      // Error handling code
+  } finally {
+      // Cleanup code, if necessary
+  }
+  ```
+
+#### **Use Unchecked Exceptions**
+- **Checked vs. Unchecked Exceptions**: Favor unchecked exceptions because they reduce the amount of boilerplate code and make your API easier to use.
+- **Example**: Instead of forcing the caller to handle a checked exception, you can throw an unchecked exception.
+  ```java
+  public void method() {
+      if (someConditionFails) {
+          throw new IllegalArgumentException("Invalid argument");
+      }
+  }
+  ```
+
+#### **Provide Context with Exceptions**
+- **Contextual Information**: Include as much context as possible in your exceptions to make debugging easier.
+- **Example**:
+  ```java
+  public void withdraw(double amount) {
+      if (amount > balance) {
+          throw new InsufficientFundsException("Attempt to withdraw " + amount + " with balance of " + balance);
+      }
+      balance -= amount;
+  }
+  ```
+
+#### **Define Exception Classes in Terms of a Caller’s Needs**
+- **Custom Exceptions**: Create custom exceptions that make sense in the context of the caller’s needs.
+- **Example**:
+  ```java
+  public class InsufficientFundsException extends RuntimeException {
+      public InsufficientFundsException(String message) {
+          super(message);
+      }
+  }
+  ```
+
+#### **Define the Normal Flow**
+- **Normal vs. Error Flow**: Ensure that the normal flow of your code is not interrupted by error handling logic.
+- **Example**:
+  ```java
+  public void processOrder(Order order) {
+      try {
+          validateOrder(order);
+          chargeCustomer(order);
+          shipOrder(order);
+      } catch (ValidationException e) {
+          handleError(e);
+      } catch (PaymentException e) {
+          handleError(e);
+      } catch (ShippingException e) {
+          handleError(e);
+      }
+  }
+  ```
+
+#### **Don’t Return Null**
+- **Avoid Null**: Returning null can lead to null pointer exceptions and makes the caller responsible for handling null checks.
+- **Example**:
+  ```java
+  // Instead of this:
+  public Customer findCustomer(String id) {
+      // return null if customer not found
+  }
+
+  // Do this:
+  public Optional<Customer> findCustomer(String id) {
+      // return Optional.empty() if customer not found
+  }
+  ```
+
+#### **Don’t Pass Null**
+- **Avoid Passing Null**: Passing null as an argument can lead to unexpected null pointer exceptions.
+- **Example**:
+  ```java
+  // Instead of this:
+  public void process(Customer customer) {
+      if (customer == null) {
+          throw new IllegalArgumentException("Customer cannot be null");
+      }
+      // process customer
+  }
+
+  // Ensure non-null arguments:
+  public void process(Customer customer) {
+      Objects.requireNonNull(customer, "Customer cannot be null");
+      // process customer
+  }
+  ```
+
 ## Chapter 8: Boundaries
 This chapter discusses managing boundaries within a codebase, such as external libraries and APIs. It emphasizes the importance of keeping these boundaries clean and using appropriate patterns to minimize their impact on the rest of the code.
 
