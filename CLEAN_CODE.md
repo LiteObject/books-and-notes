@@ -10,6 +10,225 @@ This chapter focuses on the importance of using meaningful names for variables, 
 ## Chapter 3: Functions
 The chapter delves into best practices for writing functions. It emphasizes that functions should be small, do one thing, have descriptive names, and have minimal side effects. It also discusses the importance of proper function argument usage.
 
+#### **Small!**
+- **Guideline**: Functions should be small, and the smaller, the better.
+- **Rationale**: Smaller functions are easier to understand, test, and maintain.
+- **Example**:
+  ```java
+  // Bad Example: Large function doing multiple tasks
+  public void processOrder(Order order) {
+      validateOrder(order);
+      calculatePrices(order);
+      updateInventory(order);
+      generateInvoice(order);
+      sendConfirmation(order);
+  }
+
+  // Good Example: Small functions with single responsibility
+  public void processOrder(Order order) {
+      validateOrder(order);
+      calculatePrices(order);
+      updateInventory(order);
+      generateInvoice(order);
+      sendConfirmation(order);
+  }
+
+  private void validateOrder(Order order) { /*...*/ }
+  private void calculatePrices(Order order) { /*...*/ }
+  private void updateInventory(Order order) { /*...*/ }
+  private void generateInvoice(Order order) { /*...*/ }
+  private void sendConfirmation(Order order) { /*...*/ }
+  ```
+
+#### **Do One Thing**
+- **Guideline**: A function should do one thing and do it well.
+- **Rationale**: Functions that do one thing are easier to name, understand, and modify.
+- **Example**:
+  ```java
+  // Bad Example: Function doing multiple things
+  public void saveUser(User user) {
+      validateUser(user);
+      persistUser(user);
+      sendWelcomeEmail(user);
+  }
+
+  // Good Example: Function doing one thing
+  public void saveUser(User user) {
+      persistUser(user);
+  }
+
+  private void validateUser(User user) { /*...*/ }
+  private void persistUser(User user) { /*...*/ }
+  private void sendWelcomeEmail(User user) { /*...*/ }
+  ```
+
+#### **Sections within Functions**
+- **Guideline**: If you find yourself dividing a function into sections, those sections probably belong in their own functions.
+- **Example**:
+  ```java
+  // Bad Example: Function with sections
+  public void updateUser(User user) {
+      // Validate user data
+      if (user.getName() == null) {
+          throw new IllegalArgumentException("Name cannot be null");
+      }
+
+      // Save user to database
+      userRepository.save(user);
+
+      // Send update notification
+      notificationService.sendUpdateNotification(user);
+  }
+
+  // Good Example: Sections extracted into separate functions
+  public void updateUser(User user) {
+      validateUser(user);
+      saveUser(user);
+      sendUpdateNotification(user);
+  }
+
+  private void validateUser(User user) {
+      if (user.getName() == null) {
+          throw new IllegalArgumentException("Name cannot be null");
+      }
+  }
+
+  private void saveUser(User user) {
+      userRepository.save(user);
+  }
+
+  private void sendUpdateNotification(User user) {
+      notificationService.sendUpdateNotification(user);
+  }
+  ```
+
+#### **Blocks and Indenting**
+- **Guideline**: Reduce the level of indentation in functions. Ideally, functions should not be nested deeply.
+- **Example**:
+  ```java
+  // Bad Example: Deeply nested code
+  public void process(Data data) {
+      if (data.isValid()) {
+          for (Item item : data.getItems()) {
+              if (item.isInStock()) {
+                  item.process();
+              }
+          }
+      }
+  }
+
+  // Good Example: Reduced nesting by early return
+  public void process(Data data) {
+      if (!data.isValid()) return;
+
+      for (Item item : data.getItems()) {
+          if (item.isInStock()) {
+              item.process();
+          }
+      }
+  }
+  ```
+
+#### **Use Descriptive Names**
+- **Guideline**: Function names should clearly describe what the function does.
+- **Example**:
+  ```java
+  // Bad Example: Vague function name
+  public void handle() {
+      // handle what?
+  }
+
+  // Good Example: Descriptive function name
+  public void processOrder() {
+      // process an order
+  }
+  ```
+
+#### **Function Arguments**
+- **Guideline**: The ideal number of arguments for a function is zero (niladic). Next is one (monadic), followed by two (dyadic). Three (triadic) should be avoided if possible. More than three (polyadic) requires special justification and should be avoided.
+- **Example**:
+  ```java
+  // Bad Example: Too many arguments
+  public void createUser(String name, int age, String email, String address) {
+      //...
+  }
+
+  // Good Example: Using a parameter object
+  public void createUser(User user) {
+      //...
+  }
+
+  // Parameter object
+  public class User {
+      private String name;
+      private int age;
+      private String email;
+      private String address;
+
+      // Getters and setters
+  }
+  ```
+
+#### **Have No Side Effects**
+- **Guideline**: Functions should not have hidden side effects. Any changes should be explicit and expected.
+- **Example**:
+  ```java
+  // Bad Example: Hidden side effect of logging
+  public void processOrder(Order order) {
+      logger.info("Processing order");
+      // process order
+  }
+
+  // Good Example: Explicit side effect
+  public void processOrder(Order order) {
+      logOrderProcessing(order);
+      // process order
+  }
+
+  private void logOrderProcessing(Order order) {
+      logger.info("Processing order");
+  }
+  ```
+
+#### **Command Query Separation**
+- **Guideline**: Functions should either do something (command) or answer something (query), but not both.
+- **Example**:
+  ```java
+  // Bad Example: Function doing both command and query
+  public boolean saveUser(User user) {
+      // save user
+      return success;
+  }
+
+  // Good Example: Separate command and query
+  public void saveUser(User user) {
+      // save user
+  }
+
+  public boolean isUserSaved(User user) {
+      // check if user is saved
+      return true;
+  }
+  ```
+
+#### **Prefer Exceptions to Returning Error Codes**
+- **Guideline**: Use exceptions for error handling instead of error codes. This separates error handling from the main logic.
+- **Example**:
+  ```java
+  // Bad Example: Using error codes
+  public int saveUser(User user) {
+      if (user == null) return -1;
+      // save user
+      return 0;
+  }
+
+  // Good Example: Using exceptions
+  public void saveUser(User user) {
+      if (user == null) throw new IllegalArgumentException("User cannot be null");
+      // save user
+  }
+  ```
+
 ## Chapter 4: Comments
 This chapter discusses the role of comments in code. While comments can be helpful, the emphasis is on writing self-explanatory code that minimizes the need for comments. When comments are necessary, they should be clear, concise, and relevant.
 
