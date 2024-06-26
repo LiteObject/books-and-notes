@@ -299,6 +299,123 @@ The focus here is on handling errors gracefully and effectively. The chapter adv
 ## Chapter 8: Boundaries
 This chapter discusses managing boundaries within a codebase, such as external libraries and APIs. It emphasizes the importance of keeping these boundaries clean and using appropriate patterns to minimize their impact on the rest of the code.
 
+#### **Using Third-Party Code**
+- **Challenge**: Integrating third-party libraries and frameworks can introduce complexity and dependencies into your codebase.
+- **Solution**: Isolate and encapsulate the usage of third-party code to minimize its impact on the rest of your application.
+- **Example**:
+  ```java
+  // Instead of using a third-party logger directly throughout the codebase
+  import org.slf4j.Logger;
+  import org.slf4j.LoggerFactory;
+
+  public class MyClass {
+      private static final Logger logger = LoggerFactory.getLogger(MyClass.class);
+
+      public void doSomething() {
+          logger.info("Doing something");
+      }
+  }
+
+  // Encapsulate third-party logger in a custom interface
+  public interface MyLogger {
+      void info(String msg);
+  }
+
+  public class Slf4jLogger implements MyLogger {
+      private final Logger logger;
+
+      public Slf4jLogger(Class<?> clazz) {
+          this.logger = LoggerFactory.getLogger(clazz);
+      }
+
+      @Override
+      public void info(String msg) {
+          logger.info(msg);
+      }
+  }
+
+  public class MyClass {
+      private final MyLogger logger = new Slf4jLogger(MyClass.class);
+
+      public void doSomething() {
+          logger.info("Doing something");
+      }
+  }
+  ```
+
+#### **Exploring and Learning Boundaries**
+- **Guideline**: Experiment with third-party code in a controlled environment (e.g., unit tests) to understand its behavior and limitations before integrating it into your main codebase.
+- **Example**:
+  ```java
+  @Test
+  public void testLibraryFunctionality() {
+      ThirdPartyLibrary lib = new ThirdPartyLibrary();
+      String result = lib.someMethod("input");
+      assertEquals("expectedResult", result);
+  }
+  ```
+
+#### **Learning log4j**
+- **Context**: Understanding the intricacies of a logging library like log4j before using it extensively in your application.
+- **Example**:
+  ```java
+  // Experimenting with log4j configuration
+  import org.apache.log4j.Logger;
+  import org.apache.log4j.BasicConfigurator;
+
+  public class Log4jExample {
+      static final Logger logger = Logger.getLogger(Log4jExample.class);
+
+      public static void main(String[] args) {
+          BasicConfigurator.configure();
+          logger.info("Hello, log4j!");
+      }
+  }
+  ```
+
+#### **Learning Tests Are Better Than Free**
+- **Concept**: Writing learning tests to explore and document the behavior of third-party code. These tests serve as a safety net when upgrading or changing third-party libraries.
+- **Example**:
+  ```java
+  @Test
+  public void testLibraryBehavior() {
+      ThirdPartyLibrary lib = new ThirdPartyLibrary();
+      String result = lib.someMethod("input");
+      assertEquals("expectedResult", result);
+  }
+  ```
+
+#### **Using Code That Does Not Yet Exist**
+- **Strategy**: Use interfaces and dependency injection to define the boundaries of your system, allowing for the implementation details to be filled in later.
+- **Example**:
+  ```java
+  // Define an interface for a service
+  public interface PaymentService {
+      void processPayment(Payment payment);
+  }
+
+  // Use the interface in your code
+  public class OrderProcessor {
+      private final PaymentService paymentService;
+
+      public OrderProcessor(PaymentService paymentService) {
+          this.paymentService = paymentService;
+      }
+
+      public void processOrder(Order order) {
+          paymentService.processPayment(order.getPayment());
+      }
+  }
+
+  // Implement the interface later
+  public class PayPalPaymentService implements PaymentService {
+      @Override
+      public void processPayment(Payment payment) {
+          // PayPal payment processing logic
+      }
+  }
+  ```
+
 ## Chapter 9: Unit Tests
 This chapter covers the principles of writing good unit tests. It stresses the importance of having automated tests, writing clean tests, and following the FIRST principles (Fast, Independent, Repeatable, Self-Validating, and Timely).
 
