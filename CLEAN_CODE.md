@@ -122,5 +122,4 @@ Certainly! Chapter 17 of "Clean Code" by Robert C. Martin, titled "Smells and He
 - **YAGNI (You Aren't Gonna Need It)**: Don't add functionality until it's necessary.
 - **Law of Demeter**: A method should only talk to its immediate friends, not the friends of its friends.
 
-### **Chapter Conclusion**
-Chapter 17 serves as a reference for identifying problematic code and provides actionable heuristics for improving it. The goal is to maintain code that is clean, readable, and maintainable by following these guidelines and addressing smells as they appear.
+
