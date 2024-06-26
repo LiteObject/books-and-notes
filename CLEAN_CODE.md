@@ -425,6 +425,204 @@ The chapter provides guidelines for designing and organizing classes. It discuss
 ## Chapter 11: Systems
 This chapter looks at the broader picture of software systems, including architecture and design. It discusses the importance of keeping the system clean, managing dependencies, and using design patterns effectively.
 
+#### **How Would You Build a City?**
+- **Analogy**: Building a software system is akin to building a city. It requires careful planning, but also the flexibility to adapt and change over time.
+- **Key Point**: Start with a high-level vision and iteratively develop and refine the system.
+
+#### **Separate Constructing a System from Using It**
+- **Concept**: Construction and use phases of a system should be distinct to maintain flexibility and manage dependencies effectively.
+- **Example**:
+  ```java
+  public class App {
+      public static void main(String[] args) {
+          Service service = new Service();
+          Controller controller = new Controller(service);
+          controller.doWork();
+      }
+  }
+
+  class Controller {
+      private final Service service;
+
+      public Controller(Service service) {
+          this.service = service;
+      }
+
+      public void doWork() {
+          service.perform();
+      }
+  }
+
+  class Service {
+      public void perform() {
+          System.out.println("Service is performing work.");
+      }
+  }
+  ```
+
+#### **Separation of Main**
+- **Guideline**: The main function should be responsible for setting up the application and delegating control to other parts of the system.
+- **Example**:
+  ```java
+  public class Main {
+      public static void main(String[] args) {
+          Application app = new Application();
+          app.run();
+      }
+  }
+
+  class Application {
+      public void run() {
+          // Application-specific logic here
+          System.out.println("Application is running.");
+      }
+  }
+  ```
+
+#### **Factories**
+- **Concept**: Use factory methods or classes to manage object creation, encapsulating the instantiation logic and enhancing flexibility.
+- **Example**:
+  ```java
+  public class ServiceFactory {
+      public static Service createService() {
+          return new Service();
+      }
+  }
+
+  public class Main {
+      public static void main(String[] args) {
+          Service service = ServiceFactory.createService();
+          Controller controller = new Controller(service);
+          controller.doWork();
+      }
+  }
+  ```
+
+#### **Dependency Injection**
+- **Definition**: A design pattern that allows the injection of dependencies into a class, rather than the class creating its own dependencies.
+- **Benefits**: Enhances testability, decouples components, and makes the system more flexible.
+- **Types**: Constructor Injection, Setter Injection, Interface Injection.
+- **Example**:
+  ```java
+  // Constructor Injection
+  public class Controller {
+      private final Service service;
+
+      public Controller(Service service) {
+          this.service = service;
+      }
+
+      public void doWork() {
+          service.perform();
+      }
+  }
+
+  public class Main {
+      public static void main(String[] args) {
+          Service service = new Service();
+          Controller controller = new Controller(service);
+          controller.doWork();
+      }
+  }
+  ```
+
+#### **Scaling Up**
+- **Key Point**: As systems grow, complexity increases. To manage this, adhere to principles like Single Responsibility Principle (SRP), Open/Closed Principle (OCP), and Liskov Substitution Principle (LSP).
+
+### **Examples of Scaling Techniques**
+
+#### **Single Responsibility Principle**
+- **Definition**: A class should have only one reason to change.
+- **Example**:
+  ```java
+  // Bad Example
+  class UserService {
+      public void addUser(User user) {
+          // Add user logic
+      }
+
+      public void sendWelcomeEmail(User user) {
+          // Email sending logic
+      }
+  }
+
+  // Good Example
+  class UserService {
+      public void addUser(User user) {
+          // Add user logic
+      }
+  }
+
+  class EmailService {
+      public void sendWelcomeEmail(User user) {
+          // Email sending logic
+      }
+  }
+  ```
+
+#### **Open/Closed Principle**
+- **Definition**: Software entities should be open for extension but closed for modification.
+- **Example**:
+  ```java
+  // Using Strategy Pattern for extensibility
+  interface PaymentMethod {
+      void pay(double amount);
+  }
+
+  class CreditCardPayment implements PaymentMethod {
+      @Override
+      public void pay(double amount) {
+          // Credit card payment logic
+      }
+  }
+
+  class PayPalPayment implements PaymentMethod {
+      @Override
+      public void pay(double amount) {
+          // PayPal payment logic
+      }
+  }
+
+  class PaymentProcessor {
+      private final PaymentMethod paymentMethod;
+
+      public PaymentProcessor(PaymentMethod paymentMethod) {
+          this.paymentMethod = paymentMethod;
+      }
+
+      public void processPayment(double amount) {
+          paymentMethod.pay(amount);
+      }
+  }
+  ```
+
+#### **Liskov Substitution Principle**
+- **Definition**: Subtypes must be substitutable for their base types without altering the correctness of the program.
+- **Example**:
+  ```java
+  class Bird {
+      public void fly() {
+          // Fly logic
+      }
+  }
+
+  class Sparrow extends Bird {
+      @Override
+      public void fly() {
+          // Sparrow-specific fly logic
+      }
+  }
+
+  class Ostrich extends Bird {
+      @Override
+      public void fly() {
+          throw new UnsupportedOperationException("Ostriches can't fly");
+      }
+  }
+
+  // Violates Liskov Substitution Principle because Ostrich cannot be used in place of Bird
+  ```
+
 ## Chapter 12: Emergence
 The chapter introduces the concept of emergent design, which is the idea that a clean and robust design can emerge from following simple rules and principles. It discusses the four rules of simple design: runs all tests, contains no duplication, expresses the intent of the programmer, and minimizes the number of classes and methods.
 
