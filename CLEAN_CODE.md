@@ -21,10 +21,6 @@ The chapter covers the importance of code formatting for readability and maintai
 ## Chapter 6: Objects and Data Structures
 This chapter explains the differences between objects and data structures and how to use them appropriately. It discusses encapsulation, data abstraction, and the Law of Demeter.
 
-Certainly! Here's an elaboration on Chapter 6: "Objects and Data Structures" from "Clean Code" by Robert C. Martin, broken down into key points and examples:
-
-### Chapter 6: Objects and Data Structures
-
 #### **Data Abstraction**
 - **Abstract Representation**: The importance of representing data in abstract terms rather than concrete details.
   - **Example**: Instead of exposing internal fields directly, provide methods that abstract away the details.
@@ -180,8 +176,6 @@ This chapter is a detailed case study of refactoring the SerialDate class. It il
 
 ## Chapter 17: Smells and Heuristics
 The final chapter provides a comprehensive list of "code smells" (indications of potential problems in the code) and heuristics (rules of thumb) for identifying and addressing these issues to maintain clean code.
-
-Certainly! Chapter 17 of "Clean Code" by Robert C. Martin, titled "Smells and Heuristics," provides a comprehensive list of code smells and heuristics to help identify and address issues in code. Here's an elaboration with bullet points and examples where applicable:
 
 ### **Smells and Heuristics Overview**
 - **Code Smells**: Indicators of potential problems in the code that may require refactoring.
