@@ -1,8 +1,6 @@
 # Clean Code: A Handbook of Agile Software Craftsmanship
 By Robert C Martin
 
-Certainly! Here is a chapter-by-chapter summary of "Clean Code" by Robert C. Martin:
-
 ## Chapter 1: Clean Code
 This chapter introduces the concept of clean code and emphasizes its importance. It discusses the characteristics of clean code and provides insights from various well-known programmers on what clean code means to them.
 
