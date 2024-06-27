@@ -845,6 +845,195 @@ This chapter looks at the broader picture of software systems, including archite
 ## Chapter 12: Emergence
 The chapter introduces the concept of emergent design, which is the idea that a clean and robust design can emerge from following simple rules and principles. It discusses the four rules of simple design: runs all tests, contains no duplication, expresses the intent of the programmer, and minimizes the number of classes and methods.
 
+#### **Four Rules of Simple Design**
+Kent Beck’s four rules of simple design guide the creation of clean, maintainable code. These rules are:
+
+1. **Runs All the Tests**
+2. **Contains No Duplication**
+3. **Expresses the Intent of the Programmer**
+4. **Minimizes the Number of Classes and Methods**
+
+#### **1. Runs All the Tests**
+- **Guideline**: A simple design must be verifiable and should run all the tests to ensure correctness.
+- **Rationale**: Tests provide a safety net that allows for continuous refactoring and ensures that the system behaves as expected.
+- **Example**:
+  ```java
+  // JUnit test example
+  @Test
+  public void testUserCreation() {
+      User user = new User("John", "Doe");
+      assertEquals("John", user.getFirstName());
+      assertEquals("Doe", user.getLastName());
+  }
+  ```
+
+#### **2. Contains No Duplication**
+- **Guideline**: Eliminate duplication as it makes code harder to maintain and evolve.
+- **Rationale**: Duplication increases the risk of inconsistencies and errors. Removing duplication improves clarity and reduces the chance of bugs.
+- **Example**:
+  ```java
+  // Bad Example: Duplicate code for calculating area
+  public class Rectangle {
+      public double area(double length, double width) {
+          return length * width;
+      }
+  }
+
+  public class Triangle {
+      public double area(double base, double height) {
+          return 0.5 * base * height;
+      }
+  }
+
+  // Good Example: Extracting common functionality
+  public abstract class Shape {
+      public abstract double area();
+  }
+
+  public class Rectangle extends Shape {
+      private double length;
+      private double width;
+
+      @Override
+      public double area() {
+          return length * width;
+      }
+  }
+
+  public class Triangle extends Shape {
+      private double base;
+      private double height;
+
+      @Override
+      public double area() {
+          return 0.5 * base * height;
+      }
+  }
+  ```
+
+#### **3. Expresses the Intent of the Programmer**
+- **Guideline**: Code should be written in a way that clearly expresses the programmer’s intent.
+- **Rationale**: Code that expresses intent is easier to understand, maintain, and refactor. It reduces the cognitive load on the reader.
+- **Example**:
+  ```java
+  // Bad Example: Vague code
+  public void process() {
+      if (x > 0 && y < 0) {
+          // do something
+      }
+  }
+
+  // Good Example: Expressive code
+  public void processCoordinates() {
+      if (isPositiveXAndNegativeY()) {
+          // handle case where x is positive and y is negative
+      }
+  }
+
+  private boolean isPositiveXAndNegativeY() {
+      return x > 0 && y < 0;
+  }
+  ```
+
+#### **4. Minimizes the Number of Classes and Methods**
+- **Guideline**: Keep the number of classes and methods to a minimum without sacrificing clarity or functionality.
+- **Rationale**: Fewer classes and methods reduce complexity and make the system easier to understand and maintain.
+- **Example**:
+  ```java
+  // Bad Example: Excessive classes and methods for simple functionality
+  public class UserValidator {
+      public boolean isValid(User user) {
+          // validation logic
+          return true;
+      }
+  }
+
+  public class UserProcessor {
+      private UserValidator validator;
+
+      public void process(User user) {
+          if (validator.isValid(user)) {
+              // processing logic
+          }
+      }
+  }
+
+  // Good Example: Consolidated functionality
+  public class UserService {
+      public void process(User user) {
+          if (isValid(user)) {
+              // processing logic
+          }
+      }
+
+      private boolean isValid(User user) {
+          // validation logic
+          return true;
+      }
+  }
+  ```
+
+### **Simple Design in Practice**
+
+#### **Continuous Refactoring**
+- **Guideline**: Regularly refactor code to keep it clean and maintainable.
+- **Rationale**: Continuous refactoring helps in adhering to the four rules of simple design and maintaining code quality over time.
+
+#### **Example of Refactoring**
+- **Before Refactoring**:
+  ```java
+  public class OrderProcessor {
+      public void processOrder(Order order) {
+          if (order.isValid()) {
+              // calculate total
+              double total = 0;
+              for (Item item : order.getItems()) {
+                  total += item.getPrice();
+              }
+
+              // update inventory
+              for (Item item : order.getItems()) {
+                  inventory.update(item);
+              }
+
+              // send confirmation
+              emailService.sendConfirmation(order);
+          }
+      }
+  }
+  ```
+
+- **After Refactoring**:
+  ```java
+  public class OrderProcessor {
+      public void processOrder(Order order) {
+          if (order.isValid()) {
+              calculateTotal(order);
+              updateInventory(order);
+              sendConfirmation(order);
+          }
+      }
+
+      private void calculateTotal(Order order) {
+          double total = 0;
+          for (Item item : order.getItems()) {
+              total += item.getPrice();
+          }
+          order.setTotal(total);
+      }
+
+      private void updateInventory(Order order) {
+          for (Item item : order.getItems()) {
+              inventory.update(item);
+          }
+      }
+
+      private void sendConfirmation(Order order) {
+          emailService.sendConfirmation(order);
+      }
+  }
+  ```
+
 ## Chapter 13: Concurrency
 This chapter addresses the challenges of writing concurrent code. It provides guidelines for managing concurrency, avoiding common pitfalls, and ensuring that concurrent code is clean and maintainable.
 
