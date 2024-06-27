@@ -1,5 +1,7 @@
 # FYI: For Your Improvement
 
+A summary of "FYI: For Your Improvement" with key points highlighted:
+
 - **Purpose**: Designed as a development guide to help individuals and leaders improve their skills and competencies.
 
 - **Key Concepts**:
