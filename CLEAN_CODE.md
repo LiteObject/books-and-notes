@@ -7,6 +7,192 @@ This chapter introduces the concept of clean code and emphasizes its importance.
 ## Chapter 2: Meaningful Names
 This chapter focuses on the importance of using meaningful names for variables, functions, classes, and other entities in code. It provides guidelines on how to choose names that clearly convey the purpose and usage of the code elements.
 
+#### **Use Intention-Revealing Names**
+- **Guideline**: Names should clearly convey the purpose and use of a variable, function, or class.
+- **Example**:
+  ```java
+  // Bad Example: Vague names
+  int d; // elapsed time in days
+
+  // Good Example: Intention-revealing names
+  int elapsedTimeInDays;
+  ```
+
+#### **Avoid Disinformation**
+- **Guideline**: Avoid names that could mislead the reader.
+- **Example**:
+  ```java
+  // Bad Example: Misleading name
+  int hp; // is it horsepower or health points?
+
+  // Good Example: Clear name
+  int healthPoints;
+  ```
+
+#### **Make Meaningful Distinctions**
+- **Guideline**: Use names that provide clear distinctions.
+- **Example**:
+  ```java
+  // Bad Example: Unclear distinctions
+  int data;
+  int data1; 
+
+  // Good Example: Meaningful distinctions
+  int customerData;
+  int orderData;
+  ```
+
+#### **Use Pronounceable Names**
+- **Guideline**: Names should be easy to pronounce to facilitate communication.
+- **Example**:
+  ```java
+  // Bad Example: Non-pronounceable name
+  int genymdhms;
+
+  // Good Example: Pronounceable name
+  int generationTimestamp;
+  ```
+
+#### **Use Searchable Names**
+- **Guideline**: Names should be easy to search for in the codebase.
+- **Example**:
+  ```java
+  // Bad Example: Single-letter names
+  int x;
+
+  // Good Example: Descriptive and searchable names
+  int maxWidth;
+  ```
+
+#### **Avoid Encodings**
+- **Guideline**: Avoid using prefixes or Hungarian notation that encode type or scope information in names.
+- **Example**:
+  ```java
+  // Bad Example: Encoded name
+  int iMaxWidth;
+
+  // Good Example: Descriptive name without encoding
+  int maxWidth;
+  ```
+
+#### **Hungarian Notation**
+- **Context**: Hungarian notation is an old convention where variable names include type information as a prefix.
+- **Recommendation**: Modern IDEs and tools make type encoding unnecessary, so avoid it for better readability.
+
+#### **Member Prefixes**
+- **Context**: Prefixes like `m_` for member variables are discouraged.
+- **Recommendation**: Use `this` keyword to clarify scope instead.
+- **Example**:
+  ```java
+  // Bad Example: Using member prefix
+  private int mAge;
+
+  // Good Example: Using 'this' keyword
+  private int age;
+
+  public void setAge(int age) {
+      this.age = age;
+  }
+  ```
+
+#### **Class Names**
+- **Guideline**: Class names should be nouns or noun phrases.
+- **Example**:
+  ```java
+  // Bad Example: Verb-based class name
+  class ManageUser;
+
+  // Good Example: Noun-based class name
+  class UserManager;
+  ```
+
+#### **Method Names**
+- **Guideline**: Method names should be verbs or verb phrases.
+- **Example**:
+  ```java
+  // Bad Example: Non-verb method name
+  public void data();
+
+  // Good Example: Verb method name
+  public void processData();
+  ```
+
+#### **Don't Be Cute**
+- **Guideline**: Avoid using slang or cute names. Names should be professional and clear.
+- **Example**:
+  ```java
+  // Bad Example: Cute name
+  public void whack();
+
+  // Good Example: Clear name
+  public void deleteRecord();
+  ```
+
+#### **Pick One Word per Concept**
+- **Guideline**: Use the same term consistently for the same concept.
+- **Example**:
+  ```java
+  // Bad Example: Inconsistent terminology
+  public void fetchData();
+  public void getData();
+  public void retrieveData();
+
+  // Good Example: Consistent terminology
+  public void fetchData();
+  ```
+
+#### **Use Solution Domain Names**
+- **Guideline**: Use names that make sense within the technical domain of the application.
+- **Example**:
+  ```java
+  // Bad Example: Generic term
+  int size;
+
+  // Good Example: Domain-specific term
+  int bufferSize;
+  ```
+
+#### **Use Problem Domain Names**
+- **Guideline**: Use names that reflect the problem domain when appropriate to provide context.
+- **Example**:
+  ```java
+  // Bad Example: Generic term
+  int value;
+
+  // Good Example: Problem domain term
+  int age;
+  ```
+
+#### **Add No Gratuitous Context**
+- **Guideline**: Avoid adding unnecessary context to names.
+- **Example**:
+  ```java
+  // Bad Example: Redundant context
+  public class Address {
+      private String addressStreet;
+      private String addressCity;
+      private String addressState;
+  }
+
+  // Good Example: No redundant context
+  public class Address {
+      private String street;
+      private String city;
+      private String state;
+  }
+  ```
+
+#### **Shorter Names Are Generally Better**
+- **Guideline**: Use the shortest name that conveys the meaning clearly.
+- **Example**:
+  ```java
+  // Bad Example: Overly long name
+  int numberOfItemsInTheCart;
+
+  // Good Example: Concise name
+  int itemCount;
+  ```
+
 ## Chapter 3: Functions
 The chapter delves into best practices for writing functions. It emphasizes that functions should be small, do one thing, have descriptive names, and have minimal side effects. It also discusses the importance of proper function argument usage.
 
