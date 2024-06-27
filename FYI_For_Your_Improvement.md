@@ -49,8 +49,4 @@ A summary of "FYI: For Your Improvement" with key points highlighted:
     - Transforming ideas into actionable steps.
     - Building confidence and recovering from failure.
 
-- **Resources**:
-  - References to articles, blogs, and videos for deeper dives into specific topics.
-  - Recommended search terms for further exploration of concepts.
-
 This guide provides a structured approach to personal and professional development, emphasizing continuous learning and practical application of skills.
