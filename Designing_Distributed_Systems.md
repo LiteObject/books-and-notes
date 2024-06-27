@@ -1,6 +1,8 @@
 # Designing Distributed Systems
 By Brendan Burns
 
+[GitHub / designing-distributed-systems-labs](https://github.com/brendandburns/designing-distributed-systems-labs)
+
 ## Chapter 1: Introduction
 - Overview of distributed systems and their importance in modern computing.
 - Emphasis on the need for reliability, agility, and scalability.
