@@ -46,10 +46,200 @@ By Brendan Burns
   ```
 
 ## Chapter 6: Service Discovery Patterns
-- Patterns for enabling services to find each other in a distributed system.
-- Examples include:
-  - DNS-based discovery, where services are registered with DNS.
-  - Client-side discovery, where clients are responsible for discovering service instances.
+Service discovery patterns are essential for enabling services to locate each other in a distributed system. This chapter covers various patterns for service discovery, their use cases, benefits, and challenges.
+
+#### 1. **Client-Side Discovery**
+- **Concept**: In client-side discovery, the client is responsible for determining the network location of service instances. The client queries a service registry to get a list of available instances and chooses one to send the request to.
+- **Use Cases**: Systems where clients can handle the logic for locating services.
+- **Components**:
+  - **Service Registry**: A database of available service instances.
+  - **Client**: Queries the service registry and chooses an instance.
+  - **Service Instances**: Actual services that handle requests.
+- **Benefits**:
+  - Simple and flexible architecture.
+  - Clients have control over load balancing and failover.
+- **Challenges**:
+  - Clients need to implement the discovery logic.
+  - Changes to discovery logic require updates to all clients.
+
+- **Code Example** (Python with a hypothetical service registry):
+  ```python
+  class ServiceRegistry:
+      def __init__(self):
+          self.services = {}
+
+      def register(self, service_name, instance):
+          if service_name not in self.services:
+              self.services[service_name] = []
+          self.services[service_name].append(instance)
+
+      def get_instances(self, service_name):
+          return self.services.get(service_name, [])
+
+  class Client:
+      def __init__(self, service_registry):
+          self.service_registry = service_registry
+
+      def call_service(self, service_name, request):
+          instances = self.service_registry.get_instances(service_name)
+          if not instances:
+              raise Exception("No instances available")
+          # Simple round-robin selection
+          instance = instances[0]
+          return instance.handle_request(request)
+
+  class ServiceInstance:
+      def handle_request(self, request):
+          return f"Handled request: {request}"
+
+  # Usage
+  registry = ServiceRegistry()
+  service_instance = ServiceInstance()
+  registry.register("example_service", service_instance)
+
+  client = Client(registry)
+  response = client.call_service("example_service", "Hello, Service!")
+  print(response)
+  ```
+
+#### 2. **Server-Side Discovery**
+- **Concept**: In server-side discovery, the client sends a request to a service discovery server or load balancer, which then determines the appropriate service instance to handle the request.
+- **Use Cases**: Systems where centralizing the discovery logic is preferable.
+- **Components**:
+  - **Service Registry**: A database of available service instances.
+  - **Discovery Server/Load Balancer**: Determines which service instance to route the request to.
+  - **Service Instances**: Actual services that handle requests.
+- **Benefits**:
+  - Clients do not need to implement discovery logic.
+  - Centralized control over load balancing and failover.
+- **Challenges**:
+  - Discovery server/load balancer can become a bottleneck.
+  - Increased complexity in managing the discovery server.
+
+- **Code Example** (Python with a hypothetical discovery server):
+  ```python
+  class ServiceRegistry:
+      def __init__(self):
+          self.services = {}
+
+      def register(self, service_name, instance):
+          if service_name not in self.services:
+              self.services[service_name] = []
+          self.services[service_name].append(instance)
+
+      def get_instances(self, service_name):
+          return self.services.get(service_name, [])
+
+  class DiscoveryServer:
+      def __init__(self, service_registry):
+          self.service_registry = service_registry
+
+      def route_request(self, service_name, request):
+          instances = self.service_registry.get_instances(service_name)
+          if not instances:
+              raise Exception("No instances available")
+          # Simple round-robin selection
+          instance = instances[0]
+          return instance.handle_request(request)
+
+  class ServiceInstance:
+      def handle_request(self, request):
+          return f"Handled request: {request}"
+
+  # Usage
+  registry = ServiceRegistry()
+  service_instance = ServiceInstance()
+  registry.register("example_service", service_instance)
+
+  discovery_server = DiscoveryServer(registry)
+  response = discovery_server.route_request("example_service", "Hello, Service!")
+  print(response)
+  ```
+
+#### 3. **Service Mesh**
+- **Concept**: A service mesh is an infrastructure layer that handles service-to-service communication. It typically includes features for service discovery, load balancing, traffic management, and observability.
+- **Use Cases**: Complex microservices architectures requiring advanced traffic management and observability.
+- **Components**:
+  - **Data Plane**: Handles communication between services (e.g., sidecar proxies).
+  - **Control Plane**: Manages the configuration and policies for the data plane.
+- **Benefits**:
+  - Decouples service discovery and communication logic from application code.
+  - Provides advanced features like traffic shaping, retries, and circuit breaking.
+- **Challenges**:
+  - Adds complexity to the system architecture.
+  - Performance overhead due to the additional layer.
+
+- **Code Example** (Using Istio for service mesh):
+  ```yaml
+  # Example Istio configuration for a service
+  apiVersion: networking.istio.io/v1alpha3
+  kind: VirtualService
+  metadata:
+    name: example-service
+  spec:
+    hosts:
+      - example-service
+    http:
+      - route:
+          - destination:
+              host: example-service
+              subset: v1
+  ```
+
+#### 4. **DNS-Based Discovery**
+- **Concept**: DNS-based discovery uses the Domain Name System (DNS) to resolve service names to their network locations. Services register their instances with a DNS server.
+- **Use Cases**: Simple service discovery for systems that can leverage DNS.
+- **Components**:
+  - **DNS Server**: Maintains a mapping of service names to IP addresses.
+  - **Service Instances**: Register their IP addresses with the DNS server.
+  - **Client**: Resolves service names using DNS.
+- **Benefits**:
+  - Leverages existing DNS infrastructure.
+  - Simple and widely supported.
+- **Challenges**:
+  - Limited control over load balancing and failover.
+  - DNS caching can lead to stale records.
+
+- **Code Example** (Using Python and a hypothetical DNS library):
+  ```python
+  import dns.resolver
+
+  class ServiceDNS:
+      def __init__(self):
+          self.dns_records = {}
+
+      def register(self, service_name, ip_address):
+          if service_name not in self.dns_records:
+              self.dns_records[service_name] = []
+          self.dns_records[service_name].append(ip_address)
+
+      def resolve(self, service_name):
+          return self.dns_records.get(service_name, [])
+
+  class Client:
+      def __init__(self, service_dns):
+          self.service_dns = service_dns
+
+      def call_service(self, service_name, request):
+          ip_addresses = self.service_dns.resolve(service_name)
+          if not ip_addresses:
+              raise Exception("No instances available")
+          # Simple round-robin selection
+          ip_address = ip_addresses[0]
+          return self.send_request(ip_address, request)
+
+      def send_request(self, ip_address, request):
+          # Simulate sending a request to the service instance
+          return f"Request sent to {ip_address} with message: {request}"
+
+  # Usage
+  service_dns = ServiceDNS()
+  service_dns.register("example_service", "192.168.1.1")
+
+  client = Client(service_dns)
+  response = client.call_service("example_service", "Hello, Service!")
+  print(response)
+  ```
 
 ## Chapter 7: Messaging Patterns
 Messaging patterns are crucial for enabling communication between the distributed components of a system. This chapter covers various messaging patterns, their use cases, and the benefits and challenges associated with each.
