@@ -1,4 +1,5 @@
 # Designing Distributed Systems
+By Brendan Burns
 
 ## Chapter 1: Introduction
 - Overview of distributed systems and their importance in modern computing.
