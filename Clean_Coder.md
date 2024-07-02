@@ -46,7 +46,7 @@ Summary of "The Clean Coder" highlighting the main and important concepts:
 - **Continuous Improvement:** Regularly refactor your code to improve its structure without changing its functionality. Refactoring makes the code more maintainable.
 - **Code Smells:** Identify and eliminate code smells, such as duplicated code, long methods, and large classes. This helps in keeping the codebase clean.
 
-### Commitment to Quality:
+#### Commitment to Quality:
 - **Do No Harm:** Always strive to leave the codebase in a better state than you found it. Avoid introducing new bugs or technical debt.
 - **Code Reviews:** Participate in code reviews to catch issues early and learn from others. Provide constructive feedback and be open to receiving it.
 
