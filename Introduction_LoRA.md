@@ -40,7 +40,7 @@ The following table summarizes the key differences and characteristics of Fine-T
 | **Benefits**              | - Leverages knowledge from pre-trained model.<br>- High performance on new task. | - Efficient in terms of computational power and memory.<br>- Requires less data.<br>- Reduces risk of overfitting.<br>- Applicable to various models and tasks. |
 | **Drawbacks**             | - Computationally expensive and time-consuming.<br>- Requires substantial data.<br>- Risk of overfitting. | - May not achieve the same performance as full fine-tuning.<br>- Still requires some training, although significantly less. |
 
->**Overfitting** is a common problem in machine learning where a model learns not only the underlying patterns in the training data but also the noise and outliers. This results in a model that performs exceptionally well on the training data but fails to generalize to new, unseen data. In other words, the model becomes too specialized to the training data and loses its ability to make accurate predictions on new data.
+>**What is Overfitting?** It is a common problem in machine learning where a model learns not only the underlying patterns in the training data but also the noise and outliers. This results in a model that performs exceptionally well on the training data but fails to generalize to new, unseen data. In other words, the model becomes too specialized to the training data and loses its ability to make accurate predictions on new data.
 
 ## Conclusion
 
